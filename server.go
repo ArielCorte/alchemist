@@ -16,6 +16,8 @@ func main() {
 		{"alcohol", false},
 	}
 
+	e.Static("/css", "css")
+
 	e.GET("/unlocked_ingredients", func(c echo.Context) error {
 
 		html := ""

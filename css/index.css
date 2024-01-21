@@ -1,3 +1,61 @@
+:root{
+    --primary-color-darker: #3D3522;
+    --primary-color-dark: #4A442D;
+    --primary-color: #AF9C70;
+    --primary-color-light: #AEA47C;
+    --secondary-color-darker: #386150;
+    --secondary-color-dark: #85B9A3;
+    --secondary-color: #58B09C;
+    --secondary-color-light: #A5D5CA;
+    --secondary-color-lighter: #CAF7E2;
+    --secondary-color-lightest: #E2FBEF;
+}
+
 body {
+    background-color: var(--secondary-color-lightest);
     min-height: 100dvh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+main {
+    display: flex;
+    justify-content: start;
+    flex-grow: 1;
+}
+
+main > section {
+    flex-grow: 1;
+    heith: 100%;
+}
+
+.unlocked-list {
+    padding: 1rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.unlocked-list > li {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    list-style-type: none;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.unlocked-list > li:hover {
+    background-color: var(--primary-color-light);
+}
+
+.unlocked-list > li:active {
+    background-color: var(--primary-color-dark);
 }
