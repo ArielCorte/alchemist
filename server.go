@@ -11,6 +11,9 @@ func main() {
 	ingredients := []Ingredient{
 		{"air", true},
 		{"earth", true},
+		{"fire", true},
+		{"water", true},
+		{"alcohol", false},
 	}
 
 	e.GET("/unlocked_ingredients", func(c echo.Context) error {
