@@ -26,7 +26,7 @@ func main() {
 
 		for _, ingredient := range ingredients {
 			if ingredient.unlocked {
-				html += "<li hx-swap='outerHTML' hx-target='#available-soup' hx-post='/add_ingredient?ingredient=" + ingredient.name + "'>" + ingredient.name + "</li>"
+				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + ingredient.name + "'>" + ingredient.name + "</li>"
 			}
 		}
 
@@ -38,12 +38,12 @@ func main() {
 
 		soup_ing = append(soup_ing, Ingredient{ingredient, true})
 
-		if len(soup_ing) == 2 {
+		if len(soup_ing) >= 2 {
 			// send request to craft soup
-			return c.HTML(200, "<li hx-target='#result-soup' hx-get='get_result' hx-trigger='load delay:1s'>"+ingredient+"</li>")
+			return c.HTML(200, "<div>"+soup_ing[0].name+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+soup_ing[1].name+"</div>")
 		}
 
-		return c.HTML(200, "<li>"+ingredient+"</li><div id='available-soup'></div>")
+		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+ingredient+"</div><div></div>")
 	})
 
 	e.GET("/get_result", func(c echo.Context) error {
@@ -52,7 +52,11 @@ func main() {
 		if err != nil {
 			return c.String(200, "no ingredient found")
 		}
-		return c.HTML(200, "<li>"+crafted_ing.name+"</li>")
+		return c.HTML(200, "<div>"+crafted_ing.name+"</div>")
+	})
+
+	e.PUT("/clear_result", func(c echo.Context) error {
+		return c.String(200, "")
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))

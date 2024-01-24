@@ -59,3 +59,38 @@ main > section {
 .unlocked-list > li:active {
     background-color: var(--primary-color-dark);
 }
+
+.soup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ings-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.ings-container > div{
+    background-color: var(--secondary-color-light);
+    display: flex;
+    height: 4rem;
+    min-width: 10rem;
+    border: 3px solid var(--secondary-color-dark);
+    align-items: center;
+    justify-content: center;
+}
+
+.result-container {
+    background-color: var(--primary-color-light);
+    display: inline-flex;
+    height: 4rem;
+    min-width: 10rem;
+    border: 3px solid var(--primary-color-dark);
+    align-items: center;
+    justify-content: center;
+}

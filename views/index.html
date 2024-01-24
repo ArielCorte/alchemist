@@ -10,17 +10,19 @@
   <body>
     <h1>Alchemist</h1>
     <main>
-      <ul
+      <form
+        id="unlocked-ingredients"
         class="unlocked-list"
         hx-get="/unlocked_ingredients"
         hx-target="this"
         hx-trigger="load"
-      >
-        ....
-      </ul>
-      <section>
-        <div id="available-soup"></div>
-        <div id="result-soup"></div>
+      ></form>
+      <section class="soup">
+        <div id="current-ingredients" class="ings-container">
+          <div></div>
+          <div></div>
+        </div>
+        <div id="result-soup" class="result-container"></div>
       </section>
     </main>
     <script
