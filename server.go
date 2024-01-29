@@ -12,12 +12,14 @@ func main() {
 	e.File("/", "views/index.html")
 
 	ingredients := map[string]Ingredient{
-		"air":      {"air", true, []string{}},
-		"earth":    {"earth", true, []string{}},
-		"fire":     {"fire", true, []string{}},
-		"water":    {"water", true, []string{}},
-		"rain":     {"rain", false, []string{"air", "water"}},
-		"pressure": {"pressure", false, []string{"air", "air"}},
+		"air":      {"air", true, [][]string{}},
+		"earth":    {"earth", true, [][]string{}},
+		"fire":     {"fire", true, [][]string{}},
+		"water":    {"water", true, [][]string{}},
+		"rain":     {"rain", false, [][]string{{"air", "water"}, {"cloud", "water"}}},
+		"pressure": {"pressure", false, [][]string{{"air", "air"}}},
+		"steam":    {"steam", false, [][]string{{"water", "fire"}, {"energy", "water"}}},
+		"cloud":    {"cloud", false, [][]string{{"air", "steam"}}},
 	}
 
 	soup_ing := []string{}
@@ -83,13 +85,15 @@ func craftSoup(ings map[string]Ingredient, soup_ing []string) (string, error) {
 	}
 	// check if ingredients are valid
 	for _, ingredient := range ings {
-		if soup_ing[0] != soup_ing[1] {
-			if contains(ingredient.ingredients, soup_ing[0]) && contains(ingredient.ingredients, soup_ing[1]) {
-				return ingredient.name, nil
-			}
-		} else {
-			if len(ingredient.ingredients) == 2 && ingredient.ingredients[0] == soup_ing[0] && ingredient.ingredients[1] == soup_ing[1] {
-				return ingredient.name, nil
+		for _, recipe := range ingredient.ingredients {
+			if soup_ing[0] != soup_ing[1] {
+				if contains(recipe, soup_ing[0]) && contains(recipe, soup_ing[1]) {
+					return ingredient.name, nil
+				}
+			} else {
+				if len(recipe) == 2 && recipe[0] == soup_ing[0] && recipe[1] == soup_ing[1] {
+					return ingredient.name, nil
+				}
 			}
 		}
 	}
@@ -109,5 +113,5 @@ func contains(s []string, e string) bool {
 type Ingredient struct {
 	name        string
 	unlocked    bool
-	ingredients []string
+	ingredients [][]string
 }
