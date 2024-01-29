@@ -84,6 +84,11 @@ func main() {
 		return c.String(200, "")
 	})
 
+	e.DELETE("/reset", func(c echo.Context) error {
+		soup_ing = []int{}
+		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'></div><div></div>")
+	})
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

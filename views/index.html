@@ -18,6 +18,13 @@
         hx-trigger="load"
       ></form>
       <section class="soup">
+        <button
+          class="reset"
+          hx-delete="/reset"
+          hx-target="#current-ingredients"
+        >
+          Reset
+        </button>
         <div id="current-ingredients" class="ings-container">
           <div></div>
           <div></div>

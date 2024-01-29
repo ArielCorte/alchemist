@@ -44,7 +44,7 @@ main {
     overflow-y: scroll;
 }
 
-.unlocked-list > li {
+.unlocked-list > li{
     background-color: var(--primary-color);
     color: white;
     font-weight: bold;
@@ -73,6 +73,7 @@ main {
     flex-grow: 1;
     display: flex;
     user-select: none;
+    position:relative;
 }
 
 .ings-container {
@@ -102,4 +103,20 @@ main {
     align-items: center;
     justify-content: center;
     text-transform: capitalize;
+}
+
+.reset {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    list-style-type: none;
+    padding: 1rem;
+    cursor: pointer;
+    user-select: none;
+    text-transform: capitalize;
+    border: none;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
 }
