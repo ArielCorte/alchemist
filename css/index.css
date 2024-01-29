@@ -5,18 +5,22 @@
     --primary-color-light: #AEA47C;
     --secondary-color-darker: #386150;
     --secondary-color-dark: #85B9A3;
-    --secondary-color: #58B09C;
-    --secondary-color-light: #A5D5CA;
+    --secondary-color: #58B09C; --secondary-color-light: #A5D5CA;
     --secondary-color-lighter: #CAF7E2;
     --secondary-color-lightest: #E2FBEF;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--secondary-color-lightest);
-    min-height: 100dvh;
+    height: 100dvh;
     margin: 0;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -27,11 +31,8 @@ main {
     display: flex;
     justify-content: start;
     flex-grow: 1;
-}
-
-main > section {
-    flex-grow: 1;
-    heith: 100%;
+    height: 100%;
+    overflow-y: hidden;
 }
 
 .unlocked-list {
@@ -40,6 +41,7 @@ main > section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-y: scroll;
 }
 
 .unlocked-list > li {
@@ -50,6 +52,7 @@ main > section {
     list-style-type: none;
     padding: 1rem;
     cursor: pointer;
+    user-select: none;
 }
 
 .unlocked-list > li:hover {
@@ -66,6 +69,9 @@ main > section {
     justify-content: center;
     flex-direction: column;
     gap: 1rem;
+    flex-grow: 1;
+    display: flex;
+    user-select: none;
 }
 
 .ings-container {
