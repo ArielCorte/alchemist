@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"os"
 	"sort"
 	"strconv"
 
@@ -12,18 +14,19 @@ func main() {
 	e := echo.New()
 	e.File("/", "views/index.html")
 
-	ingredients := map[int]Ingredient{
-		1: {1, "air", [][]int{}, []string{}},
-		2: {2, "earth", [][]int{}, []string{}},
-		3: {3, "fire", [][]int{}, []string{}},
-		4: {4, "water", [][]int{}, []string{}},
-		5: {5, "rain", [][]int{{1, 4}, {8, 4}}, []string{}},
-		6: {6, "pressure", [][]int{{1, 1}}, []string{}},
-		7: {7, "steam", [][]int{{4, 3}, {9, 4}}, []string{}},
-		8: {8, "cloud", [][]int{{1, 7}}, []string{}},
+	json_Ingredients, err := os.ReadFile("resources/map_ingredients.json")
+	if err != nil {
+		panic(err)
 	}
 
-	unlocked_ingredients := []int{}
+	var ingredients map[int]Ingredient
+
+	err = json.Unmarshal(json_Ingredients, &ingredients)
+	if err != nil {
+		panic(err)
+	}
+
+	unlocked_ingredients := []int{1, 2, 3, 4}
 
 	soup_ing := []int{}
 	e.Static("/css", "css")
@@ -42,7 +45,7 @@ func main() {
 		for _, i := range sorted_ingredients {
 			ingredient := ingredients[i.Key]
 			if containi(unlocked_ingredients, ingredient.Id) {
-				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + ingredient.Name + "'>" + ingredient.Name + "</li>"
+				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + ingredient.Name + "</li>"
 			}
 		}
 
@@ -61,22 +64,20 @@ func main() {
 
 		if len(soup_ing) >= 2 {
 			// send request to craft soup
-			return c.HTML(200, "<div>"+soup_ing[0]+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+soup_ing[1]+"</div>")
+			return c.HTML(200, "<div>"+ingredients[soup_ing[0]].Name+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+ingredients[soup_ing[1]].Name+"</div>")
 		}
 
-		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+ingredient+"</div><div></div>")
+		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+ingredients[id].Name+"</div><div></div>")
 	})
 
 	e.GET("/get_result", func(c echo.Context) error {
-		crafted_ing_name, err := craftSoup(ingredients, soup_ing)
-		soup_ing = []string{}
+		crafted_ing, err := craftSoup(ingredients, soup_ing)
+		soup_ing = []int{}
 		if err != nil {
 			return c.String(200, err.Error())
 		}
-		crafted_ing := ingredients[crafted_ing_name]
 		unlocked_ingredients = append(unlocked_ingredients, crafted_ing.Id)
-		ingredients[crafted_ing_name] = crafted_ing
-		return c.HTML(200, "<span hx-get='unlocked_ingredients' hx-target='#unlocked-ingredients' hx-trigger='load'>"+crafted_ing_name+"</span>")
+		return c.HTML(200, "<span hx-get='unlocked_ingredients' hx-target='#unlocked-ingredients' hx-trigger='load'>"+crafted_ing.Name+"</span>")
 	})
 
 	e.PUT("/clear_result", func(c echo.Context) error {
@@ -86,35 +87,26 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func craftSoup(ings map[string]Ingredient, soup_ing []int) (string, error) {
+func craftSoup(ings map[int]Ingredient, soup_ing []int) (Ingredient, error) {
 	if len(soup_ing) < 2 {
-		return "", errors.New("not enough ingredients")
+		return Ingredient{}, errors.New("not enough ingredients")
 	}
 	// check if ingredients are valid
 	for _, ingredient := range ings {
 		for _, recipe := range ingredient.Parents {
 			if soup_ing[0] != soup_ing[1] {
-				if contains(recipe, soup_ing[0]) && contains(recipe, soup_ing[1]) {
-					return ingredient.Name, nil
+				if containi(recipe, soup_ing[0]) && containi(recipe, soup_ing[1]) {
+					return ingredient, nil
 				}
 			} else {
 				if len(recipe) == 2 && recipe[0] == soup_ing[0] && recipe[1] == soup_ing[1] {
-					return ingredient.Name, nil
+					return ingredient, nil
 				}
 			}
 		}
 	}
 	// if valid, craft soup
-	return "", errors.New("no ingredient found")
-}
-
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
+	return Ingredient{}, errors.New("no ingredient found")
 }
 
 func containi(s []int, e int) bool {
@@ -127,10 +119,10 @@ func containi(s []int, e int) bool {
 }
 
 type Ingredient struct {
-	Id      int
-	Name    string
-	Parents [][]int
-	Tags    []string
+	Id      int      `json:"id"`
+	Name    string   `json:"name"`
+	Parents [][]int  `json:"parents"`
+	Tags    []string `json:"tags"`
 }
 
 type Pair struct {
