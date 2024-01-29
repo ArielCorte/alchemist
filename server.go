@@ -8,8 +8,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 func main() {
@@ -47,7 +45,7 @@ func main() {
 		for _, i := range sorted_ingredients {
 			ingredient := ingredients[i.Key]
 			if containi(unlocked_ingredients, ingredient.Id) {
-				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + capitalize(ingredient.Name) + "</li>"
+				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + ingredient.Name + "</li>"
 			}
 		}
 
@@ -66,10 +64,10 @@ func main() {
 
 		if len(soup_ing) >= 2 {
 			// send request to craft soup
-			return c.HTML(200, "<div>"+capitalize(ingredients[soup_ing[0]].Name)+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+capitalize(ingredients[soup_ing[1]].Name)+"</div>")
+			return c.HTML(200, "<div>"+ingredients[soup_ing[0]].Name+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+ingredients[soup_ing[1]].Name+"</div>")
 		}
 
-		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+capitalize(ingredients[id].Name)+"</div><div></div>")
+		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+ingredients[id].Name+"</div><div></div>")
 	})
 
 	e.GET("/get_result", func(c echo.Context) error {
@@ -79,7 +77,7 @@ func main() {
 			return c.String(200, err.Error())
 		}
 		unlocked_ingredients = append(unlocked_ingredients, crafted_ing.Id)
-		return c.HTML(200, "<span hx-get='unlocked_ingredients' hx-target='#unlocked-ingredients' hx-trigger='load'>"+capitalize(crafted_ing.Name)+"</span>")
+		return c.HTML(200, "<span hx-get='unlocked_ingredients' hx-target='#unlocked-ingredients' hx-trigger='load'>"+crafted_ing.Name+"</span>")
 	})
 
 	e.PUT("/clear_result", func(c echo.Context) error {
@@ -137,7 +135,3 @@ type PairList []Pair
 func (p PairList) Len() int           { return len(p) }
 func (p PairList) Less(i, j int) bool { return p[i].Value < p[j].Value }
 func (p PairList) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
-
-func capitalize(s string) string {
-	return cases.Title(language.English, cases.Compact).String(s)
-}
