@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -26,24 +27,39 @@ func main() {
 		panic(err)
 	}
 
-	unlocked_ingredients := []int{1, 2, 3, 4}
+	unlocked_ingredients := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 345, 235, 6, 456}
 
 	soup_ing := []int{}
 	e.Static("/css", "css")
 
 	e.GET("/unlocked_ingredients", func(c echo.Context) error {
+		search_query := c.QueryParam("search")
+
+		curr_ing := make(map[int]Ingredient)
+
+		if search_query != "" {
+			for _, id := range unlocked_ingredients {
+				if strings.HasPrefix(strings.ToLower(ingredients[id].Name), strings.ToLower(search_query)) {
+					curr_ing[id] = ingredients[id]
+				}
+			}
+		} else {
+			for _, id := range unlocked_ingredients {
+				curr_ing[id] = ingredients[id]
+			}
+		}
 
 		html := ""
 
-		sorted_ingredients := make(PairList, 0, len(ingredients))
+		sorted_ingredients := make(PairList, 0, len(curr_ing))
 
-		for id, ingredient := range ingredients {
+		for id, ingredient := range curr_ing {
 			sorted_ingredients = append(sorted_ingredients, Pair{id, ingredient.Name})
 		}
 		sort.Sort(sorted_ingredients)
 
 		for _, i := range sorted_ingredients {
-			ingredient := ingredients[i.Key]
+			ingredient := curr_ing[i.Key]
 			if containi(unlocked_ingredients, ingredient.Id) {
 				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + ingredient.Name + "</li>"
 			}

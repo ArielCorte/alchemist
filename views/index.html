@@ -10,13 +10,24 @@
   <body>
     <h1>Alchemist</h1>
     <main>
-      <form
-        id="unlocked-ingredients"
-        class="unlocked-list"
-        hx-get="/unlocked_ingredients"
-        hx-target="this"
-        hx-trigger="load"
-      ></form>
+      <aside>
+        <input
+          id="search"
+          type="text"
+          name="search"
+          placeholder="Search..."
+          hx-get="/unlocked_ingredients"
+          hx-target="#unlocked-ingredients"
+          hx-trigger="keyup"
+        />
+        <form
+          id="unlocked-ingredients"
+          class="unlocked-list"
+          hx-get="/unlocked_ingredients"
+          hx-target="this"
+          hx-trigger="load"
+        ></form>
+      </aside>
       <section class="soup">
         <button
           class="reset"
@@ -37,5 +48,13 @@
       integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
       crossorigin="anonymous"
     ></script>
+    <script>
+      window.addEventListener("keydown", function (e) {
+        if (e.keyCode == "75" && e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById("search").focus();
+        }
+      });
+    </script>
   </body>
 </html>
