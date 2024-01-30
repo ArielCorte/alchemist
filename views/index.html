@@ -13,12 +13,13 @@
       <aside>
         <input
           id="search"
+          class="search"
           type="text"
           name="search"
           placeholder="Search..."
           hx-get="/unlocked_ingredients"
           hx-target="#unlocked-ingredients"
-          hx-trigger="keyup"
+          hx-trigger="keyup changed"
         />
         <form
           id="unlocked-ingredients"

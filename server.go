@@ -58,10 +58,18 @@ func main() {
 		}
 		sort.Sort(sorted_ingredients)
 
+		first := true
+
 		for _, i := range sorted_ingredients {
+			trigger := "click"
 			ingredient := curr_ing[i.Key]
 			if containi(unlocked_ingredients, ingredient.Id) {
-				html += "<li hx-target='#current-ingredients' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + ingredient.Name + "</li>"
+				if first {
+					trigger += ", keyup[keyCode==13] from:#search"
+					first = false
+				}
+				html += "<li hx-target='#current-ingredients' hx-trigger='" + trigger + "' hx-post='/add_ingredient?ingredient=" + strconv.Itoa(ingredient.Id) + "'>" + ingredient.Name + "</li>"
+
 			}
 		}
 
@@ -83,7 +91,7 @@ func main() {
 			return c.HTML(200, "<div>"+ingredients[soup_ing[0]].Name+"</div><div hx-target='#result-soup' hx-get='get_result' hx-trigger='load'>"+ingredients[soup_ing[1]].Name+"</div>")
 		}
 
-		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'>"+ingredients[id].Name+"</div><div></div>")
+		return c.HTML(200, "<div hx-target='#result-soup, input' hx-put='clear_result' hx-trigger='load'>"+ingredients[id].Name+"</div><div></div>")
 	})
 
 	e.GET("/get_result", func(c echo.Context) error {
@@ -104,7 +112,6 @@ func main() {
 		soup_ing = []int{}
 		return c.HTML(200, "<div hx-target='#result-soup' hx-put='clear_result' hx-trigger='load'></div><div></div>")
 	})
-
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
