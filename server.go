@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	unlocked_ingredients := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 345, 235, 6, 456}
+	unlocked_ingredients := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 345, 235, 6, 456, 123}
 
 	soup_ing := []int{}
 	e.Static("/css", "css")

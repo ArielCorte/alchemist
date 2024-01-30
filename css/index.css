@@ -128,3 +128,30 @@ aside {
     top: 1rem;
     left: 1rem;
 }
+
+.search {
+    padding: .5rem;
+    font-size: 1rem;
+}
+
+.search-container {
+    padding: .5rem;
+    position: relative;
+}
+
+.search-container::after {
+    content: 'Ctrl-K';
+    position: absolute;
+    inset: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.search:focus {
+    outline: none;
+}
+
+.search-container:focus-within::after {
+    content: '';
+}

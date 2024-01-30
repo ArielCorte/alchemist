@@ -11,16 +11,18 @@
     <h1>Alchemist</h1>
     <main>
       <aside>
-        <input
-          id="search"
-          class="search"
-          type="text"
-          name="search"
-          placeholder="Search..."
-          hx-get="/unlocked_ingredients"
-          hx-target="#unlocked-ingredients"
-          hx-trigger="keyup changed"
-        />
+        <div class="search-container">
+          <input
+            id="search"
+            class="search"
+            type="text"
+            name="search"
+            placeholder="Search..."
+            hx-get="/unlocked_ingredients"
+            hx-target="#unlocked-ingredients"
+            hx-trigger="keyup changed"
+          />
+        </div>
         <form
           id="unlocked-ingredients"
           class="unlocked-list"
